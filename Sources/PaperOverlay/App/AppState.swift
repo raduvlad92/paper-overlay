@@ -10,6 +10,7 @@ final class AppState {
     let presetStore: PresetStore
     let overlayManager: OverlayManager
     let loginItems: LoginItemManager
+    let license: LicenseManager
 
     private init() {
         let settings = OverlaySettings()
@@ -17,5 +18,6 @@ final class AppState {
         self.presetStore = PresetStore()
         self.overlayManager = OverlayManager(settings: settings)
         self.loginItems = LoginItemManager()
+        self.license = LicenseManager()
     }
 }

@@ -1,7 +1,7 @@
 import SwiftUI
 
 enum DashboardTab: Hashable {
-    case presets, adjust, monitors
+    case presets, adjust, monitors, upgrade
 }
 
 struct DashboardView: View {
@@ -27,6 +27,7 @@ struct DashboardView: View {
                 Text("Presets", bundle: .module).tag(DashboardTab.presets)
                 Text("Adjust", bundle: .module).tag(DashboardTab.adjust)
                 Text("Monitors", bundle: .module).tag(DashboardTab.monitors)
+                Text("Upgrade", bundle: .module).tag(DashboardTab.upgrade)
             }
             .pickerStyle(.segmented)
             .labelsHidden()
@@ -39,6 +40,8 @@ struct DashboardView: View {
                     ControlsView()
                 case .monitors:
                     MonitorsView()
+                case .upgrade:
+                    UpgradeView()
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)

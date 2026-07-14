@@ -39,3 +39,15 @@
 /* Login item */
 "Start at Login" = "Start at Login";
 "Start at Login is available in the packaged app." = "Start at Login is available in the packaged app.";
+
+/* Upgrade tab */
+"Upgrade" = "Upgrade";
+"Support Paper Overlay and unlock everything, forever." = "Support Paper Overlay and unlock everything, forever.";
+"Lifetime" = "Lifetime";
+"$19 one-time" = "$19 one-time";
+"Pay once, keep every feature and update." = "Pay once, keep every feature and update.";
+"Subscription" = "Subscription";
+"$1.49 / month" = "$1.49 / month";
+"All features while your subscription is active." = "All features while your subscription is active.";
+"Purchasing isn't available yet — every feature is currently free." = "Purchasing isn't available yet — every feature is currently free.";
+"Coming soon" = "Coming soon";
