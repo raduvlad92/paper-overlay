@@ -2,6 +2,8 @@ import SwiftUI
 
 struct PresetGalleryView: View {
     @EnvironmentObject private var settings: OverlaySettings
+    @EnvironmentObject private var presetStore: PresetStore
+    @State private var newPresetName: String = ""
 
     private let columns = [GridItem(.flexible()), GridItem(.flexible())]
 
@@ -15,7 +17,51 @@ struct PresetGalleryView: View {
                     PresetButton(preset: preset)
                 }
             }
+
+            if !presetStore.customPresets.isEmpty {
+                Text("Custom", bundle: .module)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                LazyVGrid(columns: columns, spacing: 6) {
+                    ForEach(presetStore.customPresets) { preset in
+                        PresetButton(preset: preset)
+                            .contextMenu {
+                                Button(role: .destructive) {
+                                    presetStore.delete(preset)
+                                } label: {
+                                    Text("Delete", bundle: .module)
+                                }
+                            }
+                    }
+                }
+                Text("Right-click a custom preset to delete it.", bundle: .module)
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+            }
+
+            Divider()
+
+            HStack(spacing: 6) {
+                TextField(text: $newPresetName) {
+                    Text("Preset name", bundle: .module)
+                }
+                .textFieldStyle(.roundedBorder)
+                .controlSize(.small)
+                .onSubmit(saveCurrent)
+
+                Button(action: saveCurrent) {
+                    Text("Save", bundle: .module)
+                }
+                .controlSize(.small)
+                .disabled(newPresetName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            }
+            .help(Text("Save the current settings as a custom preset", bundle: .module))
         }
+    }
+
+    private func saveCurrent() {
+        presetStore.saveCurrent(named: newPresetName, from: settings)
+        newPresetName = ""
     }
 }
 

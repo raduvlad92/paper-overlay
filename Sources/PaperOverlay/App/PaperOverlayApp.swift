@@ -8,6 +8,7 @@ struct PaperOverlayApp: App {
         MenuBarExtra {
             DashboardView()
                 .environmentObject(AppState.shared.settings)
+                .environmentObject(AppState.shared.presetStore)
         } label: {
             Image(systemName: "doc.plaintext")
         }

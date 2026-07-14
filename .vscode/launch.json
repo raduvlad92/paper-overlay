@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:paper-overlay}",
+            "name": "Debug PaperOverlay",
+            "target": "PaperOverlay",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug PaperOverlay"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:paper-overlay}",
+            "name": "Release PaperOverlay",
+            "target": "PaperOverlay",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release PaperOverlay"
+        }
+    ]
+}

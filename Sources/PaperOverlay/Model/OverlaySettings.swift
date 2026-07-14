@@ -15,6 +15,56 @@ final class OverlaySettings: ObservableObject {
     @Published var masterEnabled: Bool = true
     @Published var disabledDisplays: Set<CGDirectDisplayID> = []
 
+    private struct Snapshot: Codable {
+        var red, green, blue, gamma, opacity, tileSize: Double
+        var grainSize: GrainSize
+        var masterEnabled: Bool
+        var disabledDisplays: [CGDirectDisplayID]
+    }
+
+    static let defaultsKey = "overlaySettings"
+    private let defaults: UserDefaults
+    private var saveCancellable: AnyCancellable?
+
+    init(defaults: UserDefaults = .standard) {
+        self.defaults = defaults
+
+        if let data = defaults.data(forKey: Self.defaultsKey),
+           let snapshot = try? JSONDecoder().decode(Snapshot.self, from: data) {
+            red = snapshot.red
+            green = snapshot.green
+            blue = snapshot.blue
+            gamma = snapshot.gamma
+            opacity = snapshot.opacity
+            tileSize = snapshot.tileSize
+            grainSize = snapshot.grainSize
+            masterEnabled = snapshot.masterEnabled
+            disabledDisplays = Set(snapshot.disabledDisplays)
+            NSLog("PaperOverlay: restored settings (opacity=%.2f, tile=%.0f)",
+                  opacity, tileSize)
+        }
+
+        // Debounced autosave: by the time the sink runs, the @Published
+        // values that triggered objectWillChange are already updated.
+        saveCancellable = objectWillChange
+            .debounce(for: .milliseconds(250), scheduler: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.save()
+            }
+    }
+
+    private func save() {
+        let snapshot = Snapshot(
+            red: red, green: green, blue: blue, gamma: gamma,
+            opacity: opacity, tileSize: tileSize, grainSize: grainSize,
+            masterEnabled: masterEnabled,
+            disabledDisplays: Array(disabledDisplays)
+        )
+        guard let data = try? JSONEncoder().encode(snapshot) else { return }
+        defaults.set(data, forKey: Self.defaultsKey)
+        NSLog("PaperOverlay: settings saved")
+    }
+
     var grainParameters: GrainParameters {
         GrainParameters(
             red: Float(red),

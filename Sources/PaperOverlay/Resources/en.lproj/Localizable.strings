@@ -27,3 +27,11 @@
 /* Monitors tab */
 "Overlay per monitor" = "Overlay per monitor";
 "The overlay is switched off globally." = "The overlay is switched off globally.";
+
+/* Custom presets */
+"Custom" = "Custom";
+"Preset name" = "Preset name";
+"Save" = "Save";
+"Delete" = "Delete";
+"Right-click a custom preset to delete it." = "Right-click a custom preset to delete it.";
+"Save the current settings as a custom preset" = "Save the current settings as a custom preset";
