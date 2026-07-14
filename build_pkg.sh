@@ -13,13 +13,25 @@ COMPONENT_PKG="$DIST_DIR/PaperOverlay-component.pkg"
 INSTALLER_PKG="$DIST_DIR/$APP_NAME-$VERSION-Installer.pkg"
 
 echo "==> Building component package"
+# Stage the payload and disable Installer's bundle relocation: with the
+# default (relocatable), Installer follows Spotlight to any existing copy
+# of the bundle ID and installs THERE instead of /Applications.
+PKG_ROOT="$DIST_DIR/pkgroot"
+COMPONENT_PLIST="$DIST_DIR/component.plist"
+rm -rf "$PKG_ROOT"
+mkdir -p "$PKG_ROOT"
+cp -R "$APP_BUNDLE" "$PKG_ROOT/"
+pkgbuild --analyze --root "$PKG_ROOT" "$COMPONENT_PLIST" >/dev/null
+/usr/libexec/PlistBuddy -c 'Set :0:BundleIsRelocatable false' "$COMPONENT_PLIST"
 pkgbuild \
-    --component "$APP_BUNDLE" \
+    --root "$PKG_ROOT" \
+    --component-plist "$COMPONENT_PLIST" \
     --install-location /Applications \
     --scripts Packaging/pkg/scripts \
     --identifier "$PKG_ID" \
     --version "$VERSION" \
     "$COMPONENT_PKG" >/dev/null
+rm -rf "$PKG_ROOT" "$COMPONENT_PLIST"
 
 echo "==> Building installer wizard package"
 DIST_XML="$DIST_DIR/distribution.xml"
