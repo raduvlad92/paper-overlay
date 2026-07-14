@@ -12,7 +12,7 @@ struct DashboardView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
-                Text("Paper Overlay", bundle: .module)
+                Text("Paper Overlay", bundle: .appModule)
                     .font(.headline)
                 Spacer()
                 Toggle(isOn: $settings.masterEnabled) {
@@ -20,14 +20,14 @@ struct DashboardView: View {
                 }
                 .toggleStyle(.switch)
                 .controlSize(.small)
-                .help(Text("Enable or disable the overlay everywhere", bundle: .module))
+                .help(Text("Enable or disable the overlay everywhere", bundle: .appModule))
             }
 
             Picker("", selection: $tab) {
-                Text("Presets", bundle: .module).tag(DashboardTab.presets)
-                Text("Adjust", bundle: .module).tag(DashboardTab.adjust)
-                Text("Monitors", bundle: .module).tag(DashboardTab.monitors)
-                Text("Upgrade", bundle: .module).tag(DashboardTab.upgrade)
+                Text("Presets", bundle: .appModule).tag(DashboardTab.presets)
+                Text("Adjust", bundle: .appModule).tag(DashboardTab.adjust)
+                Text("Monitors", bundle: .appModule).tag(DashboardTab.monitors)
+                Text("Upgrade", bundle: .appModule).tag(DashboardTab.upgrade)
             }
             .pickerStyle(.segmented)
             .labelsHidden()
@@ -59,14 +59,14 @@ struct DashboardView: View {
                     get: { loginItems.isEnabled },
                     set: { loginItems.setEnabled($0) }
                 )) {
-                    Text("Start at Login", bundle: .module)
+                    Text("Start at Login", bundle: .appModule)
                 }
                 .toggleStyle(.switch)
                 .controlSize(.small)
                 .disabled(!loginItems.isAvailable)
 
                 if !loginItems.isAvailable {
-                    Text("Start at Login is available in the packaged app.", bundle: .module)
+                    Text("Start at Login is available in the packaged app.", bundle: .appModule)
                         .font(.caption2)
                         .foregroundStyle(.tertiary)
                 } else if let error = loginItems.lastError {
@@ -81,7 +81,7 @@ struct DashboardView: View {
                 Button {
                     NSApp.terminate(nil)
                 } label: {
-                    Text("Quit Paper Overlay", bundle: .module)
+                    Text("Quit Paper Overlay", bundle: .appModule)
                 }
             }
         }

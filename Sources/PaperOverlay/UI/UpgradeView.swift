@@ -7,7 +7,7 @@ struct UpgradeView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Support Paper Overlay and unlock everything, forever.", bundle: .module)
+            Text("Support Paper Overlay and unlock everything, forever.", bundle: .appModule)
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
@@ -23,7 +23,7 @@ struct UpgradeView: View {
             )
 
             Text("Purchasing isn't available yet — every feature is currently free.",
-                 bundle: .module)
+                 bundle: .appModule)
                 .font(.caption2)
                 .foregroundStyle(.tertiary)
         }
@@ -38,13 +38,13 @@ private struct PricingCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 3) {
             HStack {
-                Text(titleKey, bundle: .module)
+                Text(titleKey, bundle: .appModule)
                     .font(.subheadline.bold())
                 Spacer()
-                Text(priceKey, bundle: .module)
+                Text(priceKey, bundle: .appModule)
                     .font(.subheadline.monospacedDigit())
             }
-            Text(detailKey, bundle: .module)
+            Text(detailKey, bundle: .appModule)
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
@@ -54,7 +54,7 @@ private struct PricingCard: View {
             Button {
                 // Intentionally does nothing.
             } label: {
-                Text("Coming soon", bundle: .module)
+                Text("Coming soon", bundle: .appModule)
                     .frame(maxWidth: .infinity)
             }
             .disabled(true)

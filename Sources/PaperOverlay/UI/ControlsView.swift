@@ -13,16 +13,16 @@ struct ControlsView: View {
                             range: 0...OverlaySettings.maxOpacity)
 
             HStack {
-                Text("Grain size", bundle: .module)
+                Text("Grain size", bundle: .appModule)
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 Spacer()
                 Picker("", selection: $settings.grainSize) {
-                    Text("Finest", bundle: .module).tag(GrainSize.finest)
-                    Text("Extra-fine", bundle: .module).tag(GrainSize.extraFine)
-                    Text("Ultra-fine", bundle: .module).tag(GrainSize.ultraFine)
-                    Text("Fine", bundle: .module).tag(GrainSize.fine)
-                    Text("Medium", bundle: .module).tag(GrainSize.medium)
+                    Text("Finest", bundle: .appModule).tag(GrainSize.finest)
+                    Text("Extra-fine", bundle: .appModule).tag(GrainSize.extraFine)
+                    Text("Ultra-fine", bundle: .appModule).tag(GrainSize.ultraFine)
+                    Text("Fine", bundle: .appModule).tag(GrainSize.fine)
+                    Text("Medium", bundle: .appModule).tag(GrainSize.medium)
                 }
                 .pickerStyle(.menu)
                 .labelsHidden()
@@ -31,16 +31,16 @@ struct ControlsView: View {
             }
 
             VStack(alignment: .leading, spacing: 0) {
-                Text("Pattern size", bundle: .module)
+                Text("Pattern size", bundle: .appModule)
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 HStack(spacing: 6) {
-                    Text("Small", bundle: .module)
+                    Text("Small", bundle: .appModule)
                         .font(.caption2)
                         .foregroundStyle(.tertiary)
                     Slider(value: $settings.tileSize, in: OverlaySettings.tileSizeRange)
                         .controlSize(.small)
-                    Text("Big", bundle: .module)
+                    Text("Big", bundle: .appModule)
                         .font(.caption2)
                         .foregroundStyle(.tertiary)
                 }
@@ -58,7 +58,7 @@ struct ParameterSlider: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack {
-                Text(titleKey, bundle: .module)
+                Text(titleKey, bundle: .appModule)
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 Spacer()

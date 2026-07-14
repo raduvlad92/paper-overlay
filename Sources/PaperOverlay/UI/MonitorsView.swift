@@ -6,7 +6,7 @@ struct MonitorsView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("Overlay per monitor", bundle: .module)
+            Text("Overlay per monitor", bundle: .appModule)
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
@@ -20,7 +20,7 @@ struct MonitorsView: View {
             }
 
             if !settings.masterEnabled {
-                Text("The overlay is switched off globally.", bundle: .module)
+                Text("The overlay is switched off globally.", bundle: .appModule)
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

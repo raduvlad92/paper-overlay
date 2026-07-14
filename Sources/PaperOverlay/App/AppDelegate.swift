@@ -7,6 +7,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         // icon hidden when launched as a bare executable via `swift run`.
         NSApp.setActivationPolicy(.accessory)
         NSLog("PaperOverlay: launched, activation policy set to .accessory")
+        NSLog("PaperOverlay: resources at %@", Bundle.appModule.bundlePath)
         AppState.shared.overlayManager.start()
 
         // Debug-only hook so persistence can be exercised without UI

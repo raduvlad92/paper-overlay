@@ -9,7 +9,7 @@ struct PresetGalleryView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Built-in", bundle: .module)
+            Text("Built-in", bundle: .appModule)
                 .font(.caption)
                 .foregroundStyle(.secondary)
             LazyVGrid(columns: columns, spacing: 6) {
@@ -19,7 +19,7 @@ struct PresetGalleryView: View {
             }
 
             if !presetStore.customPresets.isEmpty {
-                Text("Custom", bundle: .module)
+                Text("Custom", bundle: .appModule)
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 LazyVGrid(columns: columns, spacing: 6) {
@@ -29,12 +29,12 @@ struct PresetGalleryView: View {
                                 Button(role: .destructive) {
                                     presetStore.delete(preset)
                                 } label: {
-                                    Text("Delete", bundle: .module)
+                                    Text("Delete", bundle: .appModule)
                                 }
                             }
                     }
                 }
-                Text("Right-click a custom preset to delete it.", bundle: .module)
+                Text("Right-click a custom preset to delete it.", bundle: .appModule)
                     .font(.caption2)
                     .foregroundStyle(.tertiary)
             }
@@ -43,19 +43,19 @@ struct PresetGalleryView: View {
 
             HStack(spacing: 6) {
                 TextField(text: $newPresetName) {
-                    Text("Preset name", bundle: .module)
+                    Text("Preset name", bundle: .appModule)
                 }
                 .textFieldStyle(.roundedBorder)
                 .controlSize(.small)
                 .onSubmit(saveCurrent)
 
                 Button(action: saveCurrent) {
-                    Text("Save", bundle: .module)
+                    Text("Save", bundle: .appModule)
                 }
                 .controlSize(.small)
                 .disabled(newPresetName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
-            .help(Text("Save the current settings as a custom preset", bundle: .module))
+            .help(Text("Save the current settings as a custom preset", bundle: .appModule))
         }
     }
 
