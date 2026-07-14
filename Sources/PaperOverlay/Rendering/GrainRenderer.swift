@@ -1,28 +1,43 @@
 import MetalKit
 
-/// Grain size levels exposed in the UI, ultra-fine to coarse.
-/// Raw value is the noise cell size in points (scaled to pixels per display).
+/// Grain size levels exposed in the UI, finest to medium.
+/// Raw values are stable persistence identifiers: 3 was "coarse" (removed),
+/// and the two finer-than-ultra-fine levels were added later as 4 and 5.
 enum GrainSize: Int, CaseIterable, Codable {
     case ultraFine = 0
     case fine = 1
     case medium = 2
-    case coarse = 3
+    case finest = 4
+    case extraFine = 5
 
+    /// UI/display order, finest grain first.
+    static var allCases: [GrainSize] { [.finest, .extraFine, .ultraFine, .fine, .medium] }
+
+    init(from decoder: Decoder) throws {
+        let raw = try decoder.singleValueContainer().decode(Int.self)
+        // Raw value 3 ("coarse") no longer exists; map old saved settings
+        // and presets to the closest remaining size.
+        self = GrainSize(rawValue: raw) ?? .medium
+    }
+
+    /// Noise cell size in points (scaled to pixels per display).
     var cellPoints: Float {
         switch self {
+        case .finest: return 0.5
+        case .extraFine: return 0.75
         case .ultraFine: return 1.0
         case .fine: return 2.0
         case .medium: return 3.5
-        case .coarse: return 6.0
         }
     }
 
     var octaveMix: Float {
         switch self {
+        case .finest: return 0.65
+        case .extraFine: return 0.60
         case .ultraFine: return 0.55
         case .fine: return 0.45
         case .medium: return 0.35
-        case .coarse: return 0.25
         }
     }
 }
@@ -34,9 +49,9 @@ struct GrainParameters: Equatable {
     var green: Float = 0.78
     var blue: Float = 0.62
     var gamma: Float = 1.0
-    var opacity: Float = 0.14
-    var grainSize: GrainSize = .fine
-    var tileSizePoints: Float = 256 // 64...512
+    var opacity: Float = 0.14 // capped at 0.8 so the screen is never fully covered
+    var grainSize: GrainSize = .ultraFine
+    var tileSizePoints: Float = 256 // 160...512
 }
 
 /// Must mirror the Metal-side GrainUniforms struct (all scalar floats,

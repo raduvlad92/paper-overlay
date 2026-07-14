@@ -10,8 +10,12 @@ final class OverlaySettings: ObservableObject {
     @Published var blue: Double = 0.62
     @Published var gamma: Double = 1.0
     @Published var opacity: Double = 0.14
-    @Published var grainSize: GrainSize = .fine
-    @Published var tileSize: Double = 256 // points, 64...512
+    @Published var grainSize: GrainSize = .ultraFine
+    @Published var tileSize: Double = 256 // points, 160...512
+
+    /// Never 1.0: a fully opaque overlay would cover the whole screen.
+    static let maxOpacity: Double = 0.8
+    static let tileSizeRange: ClosedRange<Double> = 160...512
     @Published var masterEnabled: Bool = true
     @Published var disabledDisplays: Set<CGDirectDisplayID> = []
 
@@ -35,8 +39,9 @@ final class OverlaySettings: ObservableObject {
             green = snapshot.green
             blue = snapshot.blue
             gamma = snapshot.gamma
-            opacity = snapshot.opacity
-            tileSize = snapshot.tileSize
+            // Clamp values saved before the current limits existed.
+            opacity = min(snapshot.opacity, Self.maxOpacity)
+            tileSize = snapshot.tileSize.clamped(to: Self.tileSizeRange)
             grainSize = snapshot.grainSize
             masterEnabled = snapshot.masterEnabled
             disabledDisplays = Set(snapshot.disabledDisplays)
@@ -82,9 +87,9 @@ final class OverlaySettings: ObservableObject {
         green = preset.green
         blue = preset.blue
         gamma = preset.gamma
-        opacity = preset.opacity
+        opacity = min(preset.opacity, Self.maxOpacity)
         grainSize = preset.grainSize
-        tileSize = preset.tileSize
+        tileSize = preset.tileSize.clamped(to: Self.tileSizeRange)
     }
 
     /// True when the current slider values exactly match the given preset.
@@ -92,5 +97,11 @@ final class OverlaySettings: ObservableObject {
         red == preset.red && green == preset.green && blue == preset.blue
             && gamma == preset.gamma && opacity == preset.opacity
             && grainSize == preset.grainSize && tileSize == preset.tileSize
+    }
+}
+
+extension Comparable {
+    func clamped(to range: ClosedRange<Self>) -> Self {
+        min(max(self, range.lowerBound), range.upperBound)
     }
 }

@@ -21,8 +21,11 @@
 "Ultra-fine" = "Ultra-fine";
 "Fine" = "Fine";
 "Medium" = "Medium";
-"Coarse" = "Coarse";
-"Tile size" = "Tile size";
+"Finest" = "Finest";
+"Extra-fine" = "Extra-fine";
+"Pattern size" = "Pattern size";
+"Small" = "Small";
+"Big" = "Big";
 
 /* Monitors tab */
 "Overlay per monitor" = "Overlay per monitor";

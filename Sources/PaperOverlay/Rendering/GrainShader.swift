@@ -76,15 +76,18 @@ enum GrainShader {
 
         float base = tileableValueNoise(tilePos, cells, tileSize, 1.0);
         float fine = tileableValueNoise(tilePos, min(cells * 2.0, tileSize), tileSize, 2.0);
-        // Per-pixel speckle; floor(tilePos) wraps at the tile edge by construction.
-        float speckle = hash21(floor(tilePos));
+        // Per-pixel speckle from *absolute* screen coordinates, deliberately
+        // not wrapped at the tile edge: it breaks up the tile periodicity so
+        // no repeating pattern is visible even at small tile sizes.
+        float speckle = hash21(floor(in.position.xy));
 
         float n = base * (1.0 - u.octaveMix) + fine * u.octaveMix;
-        n = mix(n, speckle, 0.18);
+        n = mix(n, speckle, 0.3);
         n = pow(clamp(n, 0.0, 1.0), max(u.gamma, 0.05));
 
         float3 tint = float3(u.red, u.green, u.blue);
-        float alpha = clamp(u.opacity, 0.0, 1.0);
+        // Never fully opaque: 0.8 ceiling so the screen can't be covered.
+        float alpha = clamp(u.opacity, 0.0, 0.8);
         // Premultiplied alpha for compositing over the transparent window.
         return float4(tint * n * alpha, alpha);
     }

@@ -44,32 +44,48 @@ final class LicenseManager: ObservableObject {
     // MARK: - Keychain anchor
 
     private static func loadOrCreateFirstRunDate() -> Date {
-        let query: [String: Any] = [
+        // Never show the keychain authorization dialog: reading an item that
+        // was created by a differently-signed build of this app would
+        // otherwise block launch behind a modal prompt. With interaction
+        // disabled the read fails fast instead, and we recreate the anchor.
+        //
+        // TODO(licensing): once builds are signed with a stable Developer ID
+        // identity, every build shares the item's ACL and the recreate path
+        // stops resetting the anchor between updates.
+        SecKeychainSetUserInteractionAllowed(false)
+        defer { SecKeychainSetUserInteractionAllowed(true) }
+
+        let baseQuery: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: keychainService,
             kSecAttrAccount as String: keychainAccount,
-            kSecReturnData as String: true,
         ]
+
         var result: AnyObject?
-        if SecItemCopyMatching(query as CFDictionary, &result) == errSecSuccess,
+        var query = baseQuery
+        query[kSecReturnData as String] = true
+        let readStatus = SecItemCopyMatching(query as CFDictionary, &result)
+        if readStatus == errSecSuccess,
            let data = result as? Data,
            let string = String(data: data, encoding: .utf8),
            let interval = TimeInterval(string) {
             return Date(timeIntervalSince1970: interval)
         }
 
+        if readStatus != errSecItemNotFound {
+            // Item exists but this build can't read it (created by a
+            // previous ad-hoc build). Replace it so this build owns it.
+            NSLog("PaperOverlay: keychain anchor unreadable (%d), recreating", readStatus)
+            SecItemDelete(baseQuery as CFDictionary)
+        }
+
         let now = Date()
-        let payload = String(now.timeIntervalSince1970).data(using: .utf8)!
-        let attributes: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: keychainService,
-            kSecAttrAccount as String: keychainAccount,
-            kSecValueData as String: payload,
-        ]
-        let status = SecItemAdd(attributes as CFDictionary, nil)
-        if status != errSecSuccess {
+        var attributes = baseQuery
+        attributes[kSecValueData as String] = String(now.timeIntervalSince1970).data(using: .utf8)!
+        let addStatus = SecItemAdd(attributes as CFDictionary, nil)
+        if addStatus != errSecSuccess {
             NSLog("PaperOverlay: keychain first-run anchor failed (%d), using in-memory date",
-                  status)
+                  addStatus)
         }
         return now
     }
