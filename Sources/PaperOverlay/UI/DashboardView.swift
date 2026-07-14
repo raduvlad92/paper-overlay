@@ -9,6 +9,9 @@ struct DashboardView: View {
     @EnvironmentObject private var loginItems: LoginItemManager
     @State private var tab: DashboardTab = .presets
 
+    // TODO(licensing): flip to true when purchasing goes live.
+    private let showUpgradeTab = false
+
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
@@ -27,7 +30,9 @@ struct DashboardView: View {
                 Text("Presets", bundle: .appModule).tag(DashboardTab.presets)
                 Text("Adjust", bundle: .appModule).tag(DashboardTab.adjust)
                 Text("Monitors", bundle: .appModule).tag(DashboardTab.monitors)
-                Text("Upgrade", bundle: .appModule).tag(DashboardTab.upgrade)
+                if showUpgradeTab {
+                    Text("Upgrade", bundle: .appModule).tag(DashboardTab.upgrade)
+                }
             }
             .pickerStyle(.segmented)
             .labelsHidden()
