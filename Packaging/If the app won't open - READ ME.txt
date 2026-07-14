@@ -1,0 +1,18 @@
+PAPER OVERLAY — IF THE APP WON'T OPEN
+
+macOS blocks apps from independent developers that aren't notarized
+through Apple's developer program. You only have to get past this once:
+
+  1. Drag PaperOverlay into the Applications folder.
+  2. Open it. macOS will say it "Not Opened" — click "Done"
+     (NOT "Move to Bin").
+  3. Open System Settings -> Privacy & Security.
+  4. Scroll down: you'll see "PaperOverlay was blocked...".
+     Click "Open Anyway" and confirm.
+
+After that, Paper Overlay opens normally forever. It runs in your menu
+bar — look for the small page icon near the clock.
+
+Tip: the .pkg installer version of Paper Overlay (available from the same
+download page) walks you through installation and avoids this dance for
+the app itself.

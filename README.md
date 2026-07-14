@@ -24,14 +24,30 @@ the Windows app of the same name.
 
 Requires macOS 13 Ventura or newer.
 
-## Install (prebuilt .dmg)
+## Install
 
-1. Open the `.dmg` and drag **PaperOverlay** into **Applications**.
-2. **First launch:** right-click (or Control-click) the app and choose
-   **Open**, then confirm. This is the standard Gatekeeper step for unsigned
-   apps — Paper Overlay is currently distributed without an Apple Developer
-   signature. You only need to do this once.
-3. Look for the page icon in your menu bar.
+Paper Overlay is distributed without an Apple Developer signature, so macOS
+Gatekeeper blocks the download once. The `.pkg` installer is the recommended
+route because you only face that dialog for the installer itself — the
+installed app is quarantine-free and never shows a warning.
+
+### Recommended: guided installer (.pkg)
+
+1. Double-click `PaperOverlay-<version>-Installer.pkg`. macOS will say it
+   was blocked — click **Done** (not "Move to Bin").
+2. Open **System Settings → Privacy & Security**, scroll down, click
+   **Open Anyway**, and confirm. (One time only.)
+3. The installer wizard opens: click through **Continue → Install**. It
+   explains each step, installs the app into Applications, and launches it.
+4. Look for the page icon in your menu bar. No further security prompts —
+   apps installed by macOS Installer are not quarantined.
+
+### Alternative: .dmg
+
+Drag **PaperOverlay** into **Applications**, then the *app itself* needs the
+same Done → System Settings → **Open Anyway** dance on first launch (steps
+are in the "If the app won't open" file inside the dmg). On macOS 15 and
+newer, right-click → Open is no longer enough for unsigned apps.
 
 ## Build from source
 
@@ -53,16 +69,23 @@ Notes when running unbundled via `swift run`:
   ships only with full Xcode. This is a one-time, few-millisecond cost at
   launch with identical GPU performance afterward.
 
-## Package a distributable .dmg
+## Package for distribution
 
 ```sh
-./build_dmg.sh
+./build_pkg.sh    # recommended: guided .pkg installer wizard
+./build_dmg.sh    # alternative: classic drag-to-Applications dmg
 ```
 
-This builds a universal (Apple Silicon + Intel) release binary, assembles
+Both build a universal (Apple Silicon + Intel) release binary and assemble
 `dist/PaperOverlay.app` (with `LSUIElement` so it stays out of the Dock),
-ad-hoc codesigns it (`codesign --sign -`), and produces
-`dist/PaperOverlay-<version>.dmg` via `hdiutil`.
+ad-hoc codesigned (`codesign --sign -`). `build_pkg.sh` wraps it in a
+`pkgbuild`/`productbuild` installer with welcome/conclusion pages
+(`Packaging/pkg/`) that auto-launches the app after install; `build_dmg.sh`
+produces `dist/PaperOverlay-<version>.dmg` via `hdiutil`.
+
+The only way to remove the remaining one-time Gatekeeper dialog entirely is
+Developer ID signing + notarization, which requires the paid Apple Developer
+Program.
 
 ## Project layout
 

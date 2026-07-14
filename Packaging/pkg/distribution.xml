@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<installer-gui-script minSpecVersion="2">
+    <title>Paper Overlay</title>
+    <welcome file="welcome.html" mime-type="text/html"/>
+    <conclusion file="conclusion.html" mime-type="text/html"/>
+    <options customize="never" require-scripts="false" rootVolumeOnly="true"/>
+    <domains enable_localSystem="true"/>
+    <allowed-os-versions>
+        <os-version min="13.0"/>
+    </allowed-os-versions>
+    <choices-outline>
+        <line choice="default">
+            <line choice="com.raduvlad.PaperOverlay"/>
+        </line>
+    </choices-outline>
+    <choice id="default"/>
+    <choice id="com.raduvlad.PaperOverlay" visible="false" title="Paper Overlay">
+        <pkg-ref id="com.raduvlad.PaperOverlay"/>
+    </choice>
+    <pkg-ref id="com.raduvlad.PaperOverlay" version="VERSION_PLACEHOLDER" onConclusion="none">PaperOverlay-component.pkg</pkg-ref>
+</installer-gui-script>
