@@ -35,3 +35,7 @@
 "Delete" = "Delete";
 "Right-click a custom preset to delete it." = "Right-click a custom preset to delete it.";
 "Save the current settings as a custom preset" = "Save the current settings as a custom preset";
+
+/* Login item */
+"Start at Login" = "Start at Login";
+"Start at Login is available in the packaged app." = "Start at Login is available in the packaged app.";

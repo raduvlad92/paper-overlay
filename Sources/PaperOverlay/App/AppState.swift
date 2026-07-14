@@ -9,11 +9,13 @@ final class AppState {
     let settings: OverlaySettings
     let presetStore: PresetStore
     let overlayManager: OverlayManager
+    let loginItems: LoginItemManager
 
     private init() {
         let settings = OverlaySettings()
         self.settings = settings
         self.presetStore = PresetStore()
         self.overlayManager = OverlayManager(settings: settings)
+        self.loginItems = LoginItemManager()
     }
 }

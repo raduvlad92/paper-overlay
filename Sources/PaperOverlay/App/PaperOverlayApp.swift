@@ -9,6 +9,7 @@ struct PaperOverlayApp: App {
             DashboardView()
                 .environmentObject(AppState.shared.settings)
                 .environmentObject(AppState.shared.presetStore)
+                .environmentObject(AppState.shared.loginItems)
         } label: {
             Image(systemName: "doc.plaintext")
         }

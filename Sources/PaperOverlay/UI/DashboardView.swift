@@ -6,6 +6,7 @@ enum DashboardTab: Hashable {
 
 struct DashboardView: View {
     @EnvironmentObject private var settings: OverlaySettings
+    @EnvironmentObject private var loginItems: LoginItemManager
     @State private var tab: DashboardTab = .presets
 
     var body: some View {
@@ -43,6 +44,28 @@ struct DashboardView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
 
             Divider()
+
+            VStack(alignment: .leading, spacing: 6) {
+                Toggle(isOn: Binding(
+                    get: { loginItems.isEnabled },
+                    set: { loginItems.setEnabled($0) }
+                )) {
+                    Text("Start at Login", bundle: .module)
+                }
+                .toggleStyle(.switch)
+                .controlSize(.small)
+                .disabled(!loginItems.isAvailable)
+
+                if !loginItems.isAvailable {
+                    Text("Start at Login is available in the packaged app.", bundle: .module)
+                        .font(.caption2)
+                        .foregroundStyle(.tertiary)
+                } else if let error = loginItems.lastError {
+                    Text(error)
+                        .font(.caption2)
+                        .foregroundStyle(.red)
+                }
+            }
 
             HStack {
                 Spacer()
