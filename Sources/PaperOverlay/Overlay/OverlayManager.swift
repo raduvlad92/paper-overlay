@@ -1,7 +1,9 @@
 import AppKit
+import Combine
 
 /// Owns one overlay window per connected display, keeping the set in sync as
-/// displays are connected, disconnected, or change resolution/scale.
+/// displays are connected, disconnected, or change resolution/scale, and as
+/// the user changes settings in the dashboard.
 @MainActor
 final class OverlayManager {
     private struct Entry {
@@ -9,24 +11,19 @@ final class OverlayManager {
         let grainView: GrainOverlayView
     }
 
+    private let settings: OverlaySettings
     private var entries: [CGDirectDisplayID: Entry] = [:]
-    private var observer: NSObjectProtocol?
+    private var screenObserver: NSObjectProtocol?
+    private var settingsCancellable: AnyCancellable?
 
-    /// Shader parameters applied to every display's overlay.
-    var parameters = GrainParameters() {
-        didSet {
-            for entry in entries.values {
-                entry.grainView.parameters = parameters
-            }
-        }
+    init(settings: OverlaySettings) {
+        self.settings = settings
     }
-
-    /// Displays on which the user has switched the overlay off.
-    private(set) var disabledDisplays: Set<CGDirectDisplayID> = []
 
     func start() {
         syncScreens()
-        observer = NotificationCenter.default.addObserver(
+
+        screenObserver = NotificationCenter.default.addObserver(
             forName: NSApplication.didChangeScreenParametersNotification,
             object: nil,
             queue: .main
@@ -35,21 +32,15 @@ final class OverlayManager {
                 self?.syncScreens()
             }
         }
-    }
 
-    // MARK: - Per-monitor enable/disable
-
-    func isEnabled(display: CGDirectDisplayID) -> Bool {
-        !disabledDisplays.contains(display)
-    }
-
-    func setEnabled(_ enabled: Bool, display: CGDirectDisplayID) {
-        if enabled {
-            disabledDisplays.remove(display)
-        } else {
-            disabledDisplays.insert(display)
-        }
-        syncScreens()
+        // Live-update all overlays whenever any dashboard control changes.
+        // receive(on:) defers to the next runloop tick so @Published values
+        // are already updated when we read them.
+        settingsCancellable = settings.objectWillChange
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.applySettings()
+            }
     }
 
     /// Currently connected displays as (id, localized name) pairs, for the UI.
@@ -60,6 +51,15 @@ final class OverlayManager {
         }
     }
 
+    private func applySettings() {
+        let parameters = settings.grainParameters
+        for entry in entries.values {
+            entry.grainView.parameters = parameters
+        }
+        // Cheap when nothing changed; handles master/per-display toggles.
+        syncScreens()
+    }
+
     // MARK: - Screen syncing
 
     private func syncScreens() {
@@ -68,13 +68,16 @@ final class OverlayManager {
             return
         }
 
+        var changed = false
         var seen: Set<CGDirectDisplayID> = []
+
         for screen in NSScreen.screens {
             guard let displayID = screen.displayID else { continue }
             seen.insert(displayID)
 
-            if disabledDisplays.contains(displayID) {
-                removeOverlay(for: displayID, reason: "disabled")
+            let enabled = settings.masterEnabled && !settings.disabledDisplays.contains(displayID)
+            guard enabled else {
+                if removeOverlay(for: displayID, reason: "disabled") { changed = true }
                 continue
             }
 
@@ -82,21 +85,23 @@ final class OverlayManager {
                 // Same display: track resolution/origin/scale changes.
                 if entry.window.frame != screen.frame {
                     entry.window.setFrame(screen.frame, display: true)
+                    entry.grainView.needsDisplay = true
+                    changed = true
                     NSLog("PaperOverlay: display %u reframed to %@",
                           displayID, NSStringFromRect(screen.frame))
                 }
-                entry.grainView.needsDisplay = true
             } else {
                 let window = OverlayWindow(screen: screen)
                 let grainView = GrainOverlayView(
                     frame: CGRect(origin: .zero, size: screen.frame.size),
                     pipeline: pipeline,
-                    parameters: parameters
+                    parameters: settings.grainParameters
                 )
                 window.contentView = grainView
                 window.orderFrontRegardless()
                 grainView.needsDisplay = true
                 entries[displayID] = Entry(window: window, grainView: grainView)
+                changed = true
                 NSLog("PaperOverlay: overlay added on display %u (%@) frame=%@ scale=%.1f",
                       displayID, screen.localizedName,
                       NSStringFromRect(screen.frame), screen.backingScaleFactor)
@@ -104,18 +109,22 @@ final class OverlayManager {
         }
 
         for displayID in entries.keys where !seen.contains(displayID) {
-            removeOverlay(for: displayID, reason: "disconnected")
+            if removeOverlay(for: displayID, reason: "disconnected") { changed = true }
         }
 
-        NSLog("PaperOverlay: sync complete, %ld screen(s), %ld overlay(s) active",
-              NSScreen.screens.count, entries.count)
+        if changed {
+            NSLog("PaperOverlay: sync complete, %ld screen(s), %ld overlay(s) active",
+                  NSScreen.screens.count, entries.count)
+        }
     }
 
-    private func removeOverlay(for displayID: CGDirectDisplayID, reason: String) {
-        guard let entry = entries.removeValue(forKey: displayID) else { return }
+    @discardableResult
+    private func removeOverlay(for displayID: CGDirectDisplayID, reason: String) -> Bool {
+        guard let entry = entries.removeValue(forKey: displayID) else { return false }
         entry.window.orderOut(nil)
         entry.window.contentView = nil
         NSLog("PaperOverlay: overlay removed on display %u (%@)", displayID, reason)
+        return true
     }
 }
 

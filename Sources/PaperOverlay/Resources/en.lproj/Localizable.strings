@@ -1,3 +1,29 @@
-/* Menu bar dashboard */
+/* App */
 "Paper Overlay" = "Paper Overlay";
 "Quit Paper Overlay" = "Quit Paper Overlay";
+"Enable or disable the overlay everywhere" = "Enable or disable the overlay everywhere";
+
+/* Tabs */
+"Presets" = "Presets";
+"Adjust" = "Adjust";
+"Monitors" = "Monitors";
+
+/* Presets tab */
+"Built-in" = "Built-in";
+
+/* Adjust tab */
+"Red" = "Red";
+"Green" = "Green";
+"Blue" = "Blue";
+"Gamma" = "Gamma";
+"Opacity" = "Opacity";
+"Grain size" = "Grain size";
+"Ultra-fine" = "Ultra-fine";
+"Fine" = "Fine";
+"Medium" = "Medium";
+"Coarse" = "Coarse";
+"Tile size" = "Tile size";
+
+/* Monitors tab */
+"Overlay per monitor" = "Overlay per monitor";
+"The overlay is switched off globally." = "The overlay is switched off globally.";
