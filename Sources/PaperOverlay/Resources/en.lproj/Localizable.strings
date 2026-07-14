@@ -54,3 +54,6 @@
 "All features while your subscription is active." = "All features while your subscription is active.";
 "Purchasing isn't available yet — every feature is currently free." = "Purchasing isn't available yet — every feature is currently free.";
 "Coming soon" = "Coming soon";
+
+/* True Tone / Night Shift tip */
+"Tip: True Tone and Night Shift add their own warmth on top of the overlay. If you use them, try the Neutral preset or lower Red." = "Tip: True Tone and Night Shift add their own warmth on top of the overlay. If you use them, try the Neutral preset or lower Red.";

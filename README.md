@@ -23,6 +23,15 @@ the Windows app of the same name.
   Recording, camera, microphone, contacts, or file permissions. Settings are
   stored in `UserDefaults`.
 
+**Works with True Tone and Night Shift** — both shift your display's white
+point *on top of* the overlay, so they combine with Paper Overlay's tint
+rather than conflict. If you keep True Tone on, the color-neutral
+**Neutral** preset gives you paper texture while True Tone handles warmth;
+if you prefer manual control, the Warm/Sepia/Night presets replicate that
+warmth with texture included. (There's no macOS API for apps to read or
+switch True Tone, and Paper Overlay deliberately doesn't touch private
+system frameworks.)
+
 Requires macOS 13 Ventura or newer. Current version: **0.0.9** (early —
 not feature-complete yet).
 

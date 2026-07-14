@@ -45,6 +45,12 @@ struct ControlsView: View {
                         .foregroundStyle(.tertiary)
                 }
             }
+
+            Text("Tip: True Tone and Night Shift add their own warmth on top of the overlay. If you use them, try the Neutral preset or lower Red.",
+                 bundle: .appModule)
+                .font(.caption2)
+                .foregroundStyle(.tertiary)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 }
