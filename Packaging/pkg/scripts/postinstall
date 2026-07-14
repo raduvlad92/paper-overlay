@@ -1,15 +1,12 @@
 #!/bin/bash
 # Launch Paper Overlay for the user who is running the installer.
-# Installer runs this as root, so hand the `open` off to the console user.
+# Installer runs this as root; `launchctl asuser` targets the console
+# user's session so LaunchServices starts the app as that user.
 # Best-effort: a failure here must never fail the installation.
 
-CONSOLE_USER="$(stat -f %Su /dev/console 2>/dev/null || true)"
-if [ -n "$CONSOLE_USER" ] && [ "$CONSOLE_USER" != "root" ]; then
-    CONSOLE_UID="$(id -u "$CONSOLE_USER" 2>/dev/null || true)"
-    if [ -n "$CONSOLE_UID" ]; then
-        launchctl asuser "$CONSOLE_UID" \
-            sudo -u "$CONSOLE_USER" open /Applications/PaperOverlay.app || true
-    fi
+CONSOLE_UID="$(stat -f %u /dev/console 2>/dev/null || true)"
+if [ -n "$CONSOLE_UID" ] && [ "$CONSOLE_UID" != "0" ]; then
+    launchctl asuser "$CONSOLE_UID" /usr/bin/open /Applications/PaperOverlay.app || true
 fi
 
 exit 0

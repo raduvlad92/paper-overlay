@@ -8,6 +8,8 @@
 	<string>Paper Overlay</string>
 	<key>CFBundleExecutable</key>
 	<string>PaperOverlay</string>
+	<key>CFBundleIconFile</key>
+	<string>AppIcon</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.raduvlad.PaperOverlay</string>
 	<key>CFBundleInfoDictionaryVersion</key>

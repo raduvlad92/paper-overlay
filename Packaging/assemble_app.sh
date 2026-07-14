@@ -25,6 +25,7 @@ lipo -create \
     -output "$APP_BUNDLE/Contents/MacOS/$APP_NAME"
 cp Packaging/Info.plist "$APP_BUNDLE/Contents/Info.plist"
 printf 'APPL????' > "$APP_BUNDLE/Contents/PkgInfo"
+cp Packaging/AppIcon.icns "$APP_BUNDLE/Contents/Resources/"
 
 # SwiftPM resource bundle (localized strings); Bundle.module finds it in
 # Contents/Resources at runtime.

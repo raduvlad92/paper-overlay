@@ -32,19 +32,25 @@ struct DashboardView: View {
             .pickerStyle(.segmented)
             .labelsHidden()
 
-            Group {
-                switch tab {
-                case .presets:
-                    PresetGalleryView()
-                case .adjust:
-                    ControlsView()
-                case .monitors:
-                    MonitorsView()
-                case .upgrade:
-                    UpgradeView()
+            // Fixed-height, top-aligned content area: the MenuBarExtra window
+            // keeps one size across tabs, so shorter tabs don't float in a
+            // half-empty panel.
+            ScrollView(.vertical, showsIndicators: false) {
+                Group {
+                    switch tab {
+                    case .presets:
+                        PresetGalleryView()
+                    case .adjust:
+                        ControlsView()
+                    case .monitors:
+                        MonitorsView()
+                    case .upgrade:
+                        UpgradeView()
+                    }
                 }
+                .frame(maxWidth: .infinity, alignment: .topLeading)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
 
             Divider()
 
@@ -80,6 +86,6 @@ struct DashboardView: View {
             }
         }
         .padding(14)
-        .frame(width: 320)
+        .frame(width: 320, height: 460)
     }
 }
