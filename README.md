@@ -7,9 +7,10 @@ the Windows app of the same name.
 - **Menu-bar only** — no Dock icon, no windows; everything lives in a
   dropdown from the status bar icon.
 - **Procedural Metal shader** — the grain is generated on the GPU (no static
-  bitmaps), tileable, and parameterized by grain size (ultra-fine → coarse),
-  tile size (64–512 px), per-channel R/G/B intensity, gamma, and opacity.
-  Rendering is fully static between changes, so idle GPU usage is ~zero.
+  bitmaps) and parameterized by grain size (five levels, finest → medium),
+  pattern size, per-channel R/G/B intensity, gamma, and opacity (capped at
+  0.8 so the screen can never be fully covered). Rendering is fully static
+  between changes, so idle GPU usage is ~zero.
 - **100% click-through** — the overlay never intercepts clicks, drags,
   games, or any other input, and follows you across Spaces and fullscreen apps.
 - **Multi-monitor with hot-plug** — one overlay per display, added/removed
@@ -22,9 +23,13 @@ the Windows app of the same name.
   Recording, camera, microphone, contacts, or file permissions. Settings are
   stored in `UserDefaults`.
 
-Requires macOS 13 Ventura or newer.
+Requires macOS 13 Ventura or newer. Current version: **0.0.9** (early —
+not feature-complete yet).
 
 ## Install
+
+**Download:** grab `PaperOverlay-<version>-Installer.pkg` from the
+[latest release](https://github.com/raduvlad92/paper-overlay/releases/latest).
 
 Paper Overlay is distributed without an Apple Developer signature, so macOS
 Gatekeeper blocks the download once. The `.pkg` installer is the recommended
@@ -100,14 +105,25 @@ Sources/PaperOverlay/
   Resources/en.lproj/            localized strings (classic .strings format —
                                  string catalogs need Xcode tooling; more
                                  languages can be dropped in as <lang>.lproj/)
-Packaging/Info.plist             bundle plist used by build_dmg.sh
-build_dmg.sh                     release build + .app assembly + .dmg
+Packaging/
+  Info.plist                     bundle plist used by both build scripts
+  assemble_app.sh                shared universal-build + .app assembly step
+  pkg/                           installer wizard pages + postinstall script
+  make_icon.swift                procedural generator for AppIcon.icns
+build_pkg.sh                     guided .pkg installer (recommended artifact)
+build_dmg.sh                     classic drag-to-Applications .dmg
 ```
 
-## Licensing status
+## Monetization status
 
-All features are currently free and unlocked. `LicenseManager` is a stub —
-it anchors a first-run timestamp in the Keychain and exposes trial/license
+Everything is currently free and unlocked. `LicenseManager` is a stub — it
+anchors a first-run timestamp in the Keychain and exposes trial/license
 properties, but nothing is enforced and there is no payment or network code.
-The Upgrade tab in the dashboard is a visual placeholder. Future work is
-marked with `TODO(licensing)` comments.
+An Upgrade tab exists in the code but is hidden until purchasing is real.
+Future work is marked with `TODO(licensing)` comments.
+
+## License
+
+Source-available: you're welcome to read the code and build/run it from
+source for personal use, but redistribution and reuse in other projects
+require permission — see [LICENSE](LICENSE).

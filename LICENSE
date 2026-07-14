@@ -1,0 +1,35 @@
+Copyright (c) 2026 Vlad Radu. All rights reserved.
+
+Source-available license for Paper Overlay
+==========================================
+
+Permission is granted, free of charge, to any person obtaining a copy of
+this source code:
+
+1. to view and study the source code;
+2. to build and run the software from source for personal, non-commercial
+   use on their own devices;
+3. to fork this repository on GitHub for the sole purpose of preparing and
+   submitting contributions (pull requests) back to this repository.
+
+All other rights are reserved. Without prior written permission from the
+copyright holder, you may NOT:
+
+- redistribute the software or modified versions of it, in source or
+  binary form;
+- publish the software or derivative works on any app store, download
+  site, or package registry;
+- use this code or substantial portions of it in other projects or
+  products, commercial or otherwise.
+
+By submitting a contribution to this repository, you grant the copyright
+holder a perpetual, worldwide, irrevocable license to use, modify,
+relicense, and distribute that contribution as part of this project.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
+OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
