@@ -5,6 +5,24 @@ struct ControlsView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text("Texture", bundle: .appModule)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Picker("", selection: $settings.textureStyle) {
+                    Text("Paper grain", bundle: .appModule).tag(TextureStyle.paperGrain)
+                    Text("Canvas", bundle: .appModule).tag(TextureStyle.canvas)
+                    Text("Parchment", bundle: .appModule).tag(TextureStyle.parchment)
+                    Text("Newsprint", bundle: .appModule).tag(TextureStyle.newsprint)
+                    Text("Linen", bundle: .appModule).tag(TextureStyle.linen)
+                }
+                .pickerStyle(.menu)
+                .labelsHidden()
+                .controlSize(.small)
+                .fixedSize()
+            }
+
             ParameterSlider(titleKey: "Red", value: $settings.red, range: 0...1)
             ParameterSlider(titleKey: "Green", value: $settings.green, range: 0...1)
             ParameterSlider(titleKey: "Blue", value: $settings.blue, range: 0...1)

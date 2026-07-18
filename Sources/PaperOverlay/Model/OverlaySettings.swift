@@ -12,6 +12,7 @@ final class OverlaySettings: ObservableObject {
     @Published var opacity: Double = 0.14
     @Published var grainSize: GrainSize = .ultraFine
     @Published var tileSize: Double = 256 // points, 160...512
+    @Published var textureStyle: TextureStyle = .paperGrain
 
     /// Never 1.0: a fully opaque overlay would cover the whole screen.
     static let maxOpacity: Double = 0.8
@@ -22,11 +23,13 @@ final class OverlaySettings: ObservableObject {
     private struct Snapshot: Codable {
         var red, green, blue, gamma, opacity, tileSize: Double
         var grainSize: GrainSize
+        var textureStyle: TextureStyle
         var masterEnabled: Bool
         var disabledDisplays: [CGDirectDisplayID]
 
         init(red: Double, green: Double, blue: Double, gamma: Double,
              opacity: Double, tileSize: Double, grainSize: GrainSize,
+             textureStyle: TextureStyle,
              masterEnabled: Bool, disabledDisplays: [CGDirectDisplayID]) {
             self.red = red
             self.green = green
@@ -35,6 +38,7 @@ final class OverlaySettings: ObservableObject {
             self.opacity = opacity
             self.tileSize = tileSize
             self.grainSize = grainSize
+            self.textureStyle = textureStyle
             self.masterEnabled = masterEnabled
             self.disabledDisplays = disabledDisplays
         }
@@ -50,6 +54,7 @@ final class OverlaySettings: ObservableObject {
             opacity = try c.decodeIfPresent(Double.self, forKey: .opacity) ?? 0.14
             tileSize = try c.decodeIfPresent(Double.self, forKey: .tileSize) ?? 256
             grainSize = try c.decodeIfPresent(GrainSize.self, forKey: .grainSize) ?? .ultraFine
+            textureStyle = try c.decodeIfPresent(TextureStyle.self, forKey: .textureStyle) ?? .paperGrain
             masterEnabled = try c.decodeIfPresent(Bool.self, forKey: .masterEnabled) ?? true
             disabledDisplays = try c.decodeIfPresent([CGDirectDisplayID].self, forKey: .disabledDisplays) ?? []
         }
@@ -72,6 +77,7 @@ final class OverlaySettings: ObservableObject {
             opacity = min(snapshot.opacity, Self.maxOpacity)
             tileSize = snapshot.tileSize.clamped(to: Self.tileSizeRange)
             grainSize = snapshot.grainSize
+            textureStyle = snapshot.textureStyle
             masterEnabled = snapshot.masterEnabled
             disabledDisplays = Set(snapshot.disabledDisplays)
             NSLog("PaperOverlay: restored settings (opacity=%.2f, tile=%.0f)",
@@ -91,6 +97,7 @@ final class OverlaySettings: ObservableObject {
         let snapshot = Snapshot(
             red: red, green: green, blue: blue, gamma: gamma,
             opacity: opacity, tileSize: tileSize, grainSize: grainSize,
+            textureStyle: textureStyle,
             masterEnabled: masterEnabled,
             disabledDisplays: Array(disabledDisplays)
         )
@@ -107,7 +114,8 @@ final class OverlaySettings: ObservableObject {
             gamma: Float(gamma),
             opacity: Float(opacity),
             grainSize: grainSize,
-            tileSizePoints: Float(tileSize)
+            tileSizePoints: Float(tileSize),
+            textureStyle: textureStyle
         )
     }
 
@@ -119,6 +127,7 @@ final class OverlaySettings: ObservableObject {
         opacity = min(preset.opacity, Self.maxOpacity)
         grainSize = preset.grainSize
         tileSize = preset.tileSize.clamped(to: Self.tileSizeRange)
+        textureStyle = preset.textureStyle
     }
 
     /// True when the current slider values exactly match the given preset.
@@ -126,6 +135,7 @@ final class OverlaySettings: ObservableObject {
         red == preset.red && green == preset.green && blue == preset.blue
             && gamma == preset.gamma && opacity == preset.opacity
             && grainSize == preset.grainSize && tileSize == preset.tileSize
+            && textureStyle == preset.textureStyle
     }
 }
 

@@ -11,10 +11,12 @@ struct Preset: Identifiable, Codable, Equatable {
     var opacity: Double
     var grainSize: GrainSize
     var tileSize: Double
+    var textureStyle: TextureStyle = .paperGrain
     var isBuiltIn: Bool = false
 
     init(id: UUID = UUID(), name: String, red: Double, green: Double, blue: Double,
          gamma: Double, opacity: Double, grainSize: GrainSize, tileSize: Double,
+         textureStyle: TextureStyle = .paperGrain,
          isBuiltIn: Bool = false) {
         self.id = id
         self.name = name
@@ -25,6 +27,7 @@ struct Preset: Identifiable, Codable, Equatable {
         self.opacity = opacity
         self.grainSize = grainSize
         self.tileSize = tileSize
+        self.textureStyle = textureStyle
         self.isBuiltIn = isBuiltIn
     }
 
@@ -42,6 +45,7 @@ struct Preset: Identifiable, Codable, Equatable {
         opacity = try c.decodeIfPresent(Double.self, forKey: .opacity) ?? 0.14
         grainSize = try c.decodeIfPresent(GrainSize.self, forKey: .grainSize) ?? .ultraFine
         tileSize = try c.decodeIfPresent(Double.self, forKey: .tileSize) ?? 256
+        textureStyle = try c.decodeIfPresent(TextureStyle.self, forKey: .textureStyle) ?? .paperGrain
         isBuiltIn = try c.decodeIfPresent(Bool.self, forKey: .isBuiltIn) ?? false
     }
 

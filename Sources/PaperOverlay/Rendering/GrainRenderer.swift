@@ -1,5 +1,19 @@
 import MetalKit
 
+/// Procedural texture families rendered by the shader.
+enum TextureStyle: Int, CaseIterable, Codable {
+    case paperGrain = 0
+    case canvas = 1
+    case parchment = 2
+    case newsprint = 3
+    case linen = 4
+
+    init(from decoder: Decoder) throws {
+        let raw = try decoder.singleValueContainer().decode(Int.self)
+        self = TextureStyle(rawValue: raw) ?? .paperGrain
+    }
+}
+
 /// Grain size levels exposed in the UI, finest to medium.
 /// Raw values are stable persistence identifiers: 3 was "coarse" (removed),
 /// and the two finer-than-ultra-fine levels were added later as 4 and 5.
@@ -52,6 +66,7 @@ struct GrainParameters: Equatable {
     var opacity: Float = 0.14 // capped at 0.8 so the screen is never fully covered
     var grainSize: GrainSize = .ultraFine
     var tileSizePoints: Float = 256 // 160...512
+    var textureStyle: TextureStyle = .paperGrain
 }
 
 /// Must mirror the Metal-side GrainUniforms struct (all scalar floats,
@@ -65,6 +80,7 @@ private struct GrainUniforms {
     var grainCell: Float
     var tileSize: Float
     var octaveMix: Float
+    var style: Float
 }
 
 enum GrainRendererError: Error {
@@ -163,7 +179,8 @@ final class GrainOverlayView: MTKView, MTKViewDelegate {
             opacity: parameters.opacity,
             grainCell: parameters.grainSize.cellPoints * scale,
             tileSize: parameters.tileSizePoints * scale,
-            octaveMix: parameters.grainSize.octaveMix
+            octaveMix: parameters.grainSize.octaveMix,
+            style: Float(parameters.textureStyle.rawValue)
         )
 
         encoder.setRenderPipelineState(pipeline.pipelineState)
