@@ -24,6 +24,35 @@ final class OverlaySettings: ObservableObject {
         var grainSize: GrainSize
         var masterEnabled: Bool
         var disabledDisplays: [CGDirectDisplayID]
+
+        init(red: Double, green: Double, blue: Double, gamma: Double,
+             opacity: Double, tileSize: Double, grainSize: GrainSize,
+             masterEnabled: Bool, disabledDisplays: [CGDirectDisplayID]) {
+            self.red = red
+            self.green = green
+            self.blue = blue
+            self.gamma = gamma
+            self.opacity = opacity
+            self.tileSize = tileSize
+            self.grainSize = grainSize
+            self.masterEnabled = masterEnabled
+            self.disabledDisplays = disabledDisplays
+        }
+
+        /// Tolerant decoding: fields added in later versions fall back to
+        /// defaults instead of failing the decode and losing all settings.
+        init(from decoder: Decoder) throws {
+            let c = try decoder.container(keyedBy: CodingKeys.self)
+            red = try c.decodeIfPresent(Double.self, forKey: .red) ?? 0.85
+            green = try c.decodeIfPresent(Double.self, forKey: .green) ?? 0.78
+            blue = try c.decodeIfPresent(Double.self, forKey: .blue) ?? 0.62
+            gamma = try c.decodeIfPresent(Double.self, forKey: .gamma) ?? 1.0
+            opacity = try c.decodeIfPresent(Double.self, forKey: .opacity) ?? 0.14
+            tileSize = try c.decodeIfPresent(Double.self, forKey: .tileSize) ?? 256
+            grainSize = try c.decodeIfPresent(GrainSize.self, forKey: .grainSize) ?? .ultraFine
+            masterEnabled = try c.decodeIfPresent(Bool.self, forKey: .masterEnabled) ?? true
+            disabledDisplays = try c.decodeIfPresent([CGDirectDisplayID].self, forKey: .disabledDisplays) ?? []
+        }
     }
 
     static let defaultsKey = "overlaySettings"
