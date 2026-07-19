@@ -34,6 +34,9 @@ enum GrainShader {
         float tileSize;   // seamless tile period in *pixels*
         float octaveMix;  // weight of the second, finer noise octave
         float style;      // TextureStyle raw value
+        float vignette;   // lamp-light edge darkening, 0..1
+        float viewportW;  // drawable size in pixels
+        float viewportH;
     };
 
     float hash21(float2 p) {
@@ -133,8 +136,18 @@ enum GrainShader {
         float3 tint = float3(u.red, u.green, u.blue);
         // Never fully opaque: 0.8 ceiling so the screen can't be covered.
         float alpha = clamp(u.opacity, 0.0, 0.8);
+
+        // Lamp light: soft darkening toward the screen edges, composited as
+        // black over the texture layer. Center stays untouched, so content
+        // readability is unaffected.
+        float2 uvn = in.position.xy / float2(max(u.viewportW, 1.0), max(u.viewportH, 1.0));
+        float r = length(uvn - 0.5) * 1.41421;
+        float vigA = clamp(u.vignette, 0.0, 1.0) * 0.45 * smoothstep(0.35, 1.05, r);
+
         // Premultiplied alpha for compositing over the transparent window.
-        return float4(tint * n * alpha, alpha);
+        float3 rgb = tint * n * alpha * (1.0 - vigA);
+        float a = alpha + vigA * (1.0 - alpha);
+        return float4(rgb, a);
     }
     """
 }

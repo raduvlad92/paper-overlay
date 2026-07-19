@@ -29,7 +29,8 @@ final class PresetStore: ObservableObject {
             opacity: settings.opacity,
             grainSize: settings.grainSize,
             tileSize: settings.tileSize,
-            textureStyle: settings.textureStyle
+            textureStyle: settings.textureStyle,
+            vignette: settings.vignette
         )
         customPresets.append(preset)
         persist()

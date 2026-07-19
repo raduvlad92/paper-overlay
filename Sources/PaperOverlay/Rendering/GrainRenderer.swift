@@ -67,6 +67,7 @@ struct GrainParameters: Equatable {
     var grainSize: GrainSize = .ultraFine
     var tileSizePoints: Float = 256 // 160...512
     var textureStyle: TextureStyle = .paperGrain
+    var vignette: Float = 0 // lamp-light edge darkening, 0..1
 }
 
 /// Must mirror the Metal-side GrainUniforms struct (all scalar floats,
@@ -81,6 +82,9 @@ private struct GrainUniforms {
     var tileSize: Float
     var octaveMix: Float
     var style: Float
+    var vignette: Float
+    var viewportW: Float
+    var viewportH: Float
 }
 
 enum GrainRendererError: Error {
@@ -180,7 +184,10 @@ final class GrainOverlayView: MTKView, MTKViewDelegate {
             grainCell: parameters.grainSize.cellPoints * scale,
             tileSize: parameters.tileSizePoints * scale,
             octaveMix: parameters.grainSize.octaveMix,
-            style: Float(parameters.textureStyle.rawValue)
+            style: Float(parameters.textureStyle.rawValue),
+            vignette: parameters.vignette,
+            viewportW: Float(view.drawableSize.width),
+            viewportH: Float(view.drawableSize.height)
         )
 
         encoder.setRenderPipelineState(pipeline.pipelineState)

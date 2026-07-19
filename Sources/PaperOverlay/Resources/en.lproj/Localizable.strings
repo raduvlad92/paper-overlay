@@ -65,3 +65,6 @@
 "Parchment" = "Parchment";
 "Newsprint" = "Newsprint";
 "Linen" = "Linen";
+
+/* Lamp light */
+"Lamp light" = "Lamp light";

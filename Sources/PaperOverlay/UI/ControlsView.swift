@@ -64,6 +64,8 @@ struct ControlsView: View {
                 }
             }
 
+            ParameterSlider(titleKey: "Lamp light", value: $settings.vignette, range: 0...1)
+
             Text("Tip: True Tone and Night Shift add their own warmth on top of the overlay. If you use them, try the Neutral preset or lower Red.",
                  bundle: .appModule)
                 .font(.caption2)
