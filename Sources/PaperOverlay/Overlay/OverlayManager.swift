@@ -53,8 +53,10 @@ final class OverlayManager {
 
     private func applySettings() {
         let parameters = settings.grainParameters
+        let sharing: NSWindow.SharingType = settings.hiddenFromCapture ? .none : .readOnly
         for entry in entries.values {
             entry.grainView.parameters = parameters
+            entry.window.sharingType = sharing
         }
         // Cheap when nothing changed; handles master/per-display toggles.
         syncScreens()
@@ -92,6 +94,7 @@ final class OverlayManager {
                 }
             } else {
                 let window = OverlayWindow(screen: screen)
+                window.sharingType = settings.hiddenFromCapture ? .none : .readOnly
                 let grainView = GrainOverlayView(
                     frame: CGRect(origin: .zero, size: screen.frame.size),
                     pipeline: pipeline,

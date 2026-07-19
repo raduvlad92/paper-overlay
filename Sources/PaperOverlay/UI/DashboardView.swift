@@ -1,7 +1,7 @@
 import SwiftUI
 
 enum DashboardTab: Hashable {
-    case presets, adjust, monitors, upgrade
+    case presets, adjust, monitors, options, upgrade
 }
 
 struct DashboardView: View {
@@ -30,6 +30,7 @@ struct DashboardView: View {
                 Text("Presets", bundle: .appModule).tag(DashboardTab.presets)
                 Text("Adjust", bundle: .appModule).tag(DashboardTab.adjust)
                 Text("Monitors", bundle: .appModule).tag(DashboardTab.monitors)
+                Text("Options", bundle: .appModule).tag(DashboardTab.options)
                 if showUpgradeTab {
                     Text("Upgrade", bundle: .appModule).tag(DashboardTab.upgrade)
                 }
@@ -49,6 +50,8 @@ struct DashboardView: View {
                         ControlsView()
                     case .monitors:
                         MonitorsView()
+                    case .options:
+                        OptionsView()
                     case .upgrade:
                         UpgradeView()
                     }

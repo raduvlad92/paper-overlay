@@ -68,3 +68,8 @@
 
 /* Lamp light */
 "Lamp light" = "Lamp light";
+
+/* Options tab */
+"Options" = "Options";
+"Hide from screenshots & screen sharing" = "Hide from screenshots & screen sharing";
+"You see the overlay, but screenshots, recordings, and video-call screen shares stay clean." = "You see the overlay, but screenshots, recordings, and video-call screen shares stay clean.";

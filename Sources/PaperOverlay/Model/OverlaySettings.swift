@@ -20,6 +20,8 @@ final class OverlaySettings: ObservableObject {
     static let tileSizeRange: ClosedRange<Double> = 160...512
     @Published var masterEnabled: Bool = true
     @Published var disabledDisplays: Set<CGDirectDisplayID> = []
+    /// Overlay excluded from screenshots, recordings, and screen sharing.
+    @Published var hiddenFromCapture: Bool = true
 
     private struct Snapshot: Codable {
         var red, green, blue, gamma, opacity, tileSize, vignette: Double
@@ -27,11 +29,13 @@ final class OverlaySettings: ObservableObject {
         var textureStyle: TextureStyle
         var masterEnabled: Bool
         var disabledDisplays: [CGDirectDisplayID]
+        var hiddenFromCapture: Bool
 
         init(red: Double, green: Double, blue: Double, gamma: Double,
              opacity: Double, tileSize: Double, vignette: Double,
              grainSize: GrainSize, textureStyle: TextureStyle,
-             masterEnabled: Bool, disabledDisplays: [CGDirectDisplayID]) {
+             masterEnabled: Bool, disabledDisplays: [CGDirectDisplayID],
+             hiddenFromCapture: Bool) {
             self.red = red
             self.green = green
             self.blue = blue
@@ -43,6 +47,7 @@ final class OverlaySettings: ObservableObject {
             self.textureStyle = textureStyle
             self.masterEnabled = masterEnabled
             self.disabledDisplays = disabledDisplays
+            self.hiddenFromCapture = hiddenFromCapture
         }
 
         /// Tolerant decoding: fields added in later versions fall back to
@@ -60,6 +65,7 @@ final class OverlaySettings: ObservableObject {
             textureStyle = try c.decodeIfPresent(TextureStyle.self, forKey: .textureStyle) ?? .paperGrain
             masterEnabled = try c.decodeIfPresent(Bool.self, forKey: .masterEnabled) ?? true
             disabledDisplays = try c.decodeIfPresent([CGDirectDisplayID].self, forKey: .disabledDisplays) ?? []
+            hiddenFromCapture = try c.decodeIfPresent(Bool.self, forKey: .hiddenFromCapture) ?? true
         }
     }
 
@@ -84,6 +90,7 @@ final class OverlaySettings: ObservableObject {
             textureStyle = snapshot.textureStyle
             masterEnabled = snapshot.masterEnabled
             disabledDisplays = Set(snapshot.disabledDisplays)
+            hiddenFromCapture = snapshot.hiddenFromCapture
             NSLog("PaperOverlay: restored settings (opacity=%.2f, tile=%.0f)",
                   opacity, tileSize)
         }
@@ -103,7 +110,8 @@ final class OverlaySettings: ObservableObject {
             opacity: opacity, tileSize: tileSize, vignette: vignette,
             grainSize: grainSize, textureStyle: textureStyle,
             masterEnabled: masterEnabled,
-            disabledDisplays: Array(disabledDisplays)
+            disabledDisplays: Array(disabledDisplays),
+            hiddenFromCapture: hiddenFromCapture
         )
         guard let data = try? JSONEncoder().encode(snapshot) else { return }
         defaults.set(data, forKey: Self.defaultsKey)
