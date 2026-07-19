@@ -73,3 +73,10 @@
 "Options" = "Options";
 "Hide from screenshots & screen sharing" = "Hide from screenshots & screen sharing";
 "You see the overlay, but screenshots, recordings, and video-call screen shares stay clean." = "You see the overlay, but screenshots, recordings, and video-call screen shares stay clean.";
+
+/* Hotkey */
+"Toggle overlay shortcut" = "Toggle overlay shortcut";
+"Press keys…" = "Press keys…";
+"Record" = "Record";
+"Remove shortcut" = "Remove shortcut";
+"Works system-wide. Include ⌘, ⌃, or ⌥; press Esc to cancel recording." = "Works system-wide. Include ⌘, ⌃, or ⌥; press Esc to cancel recording.";

@@ -11,6 +11,7 @@ final class AppState {
     let overlayManager: OverlayManager
     let loginItems: LoginItemManager
     let license: LicenseManager
+    let hotkeys: HotkeyManager
 
     private init() {
         let settings = OverlaySettings()
@@ -19,5 +20,6 @@ final class AppState {
         self.overlayManager = OverlayManager(settings: settings)
         self.loginItems = LoginItemManager()
         self.license = LicenseManager()
+        self.hotkeys = HotkeyManager { settings.masterEnabled.toggle() }
     }
 }
