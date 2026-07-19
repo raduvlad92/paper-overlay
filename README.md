@@ -32,7 +32,7 @@ warmth with texture included. (There's no macOS API for apps to read or
 switch True Tone, and Paper Overlay deliberately doesn't touch private
 system frameworks.)
 
-Requires macOS 13 Ventura or newer. Current version: **0.0.10** (early —
+Requires macOS 13 Ventura or newer. Current version: **0.0.11** (early —
 not feature-complete yet).
 
 ## Install
