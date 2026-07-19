@@ -12,6 +12,7 @@ struct PaperOverlayApp: App {
                 .environmentObject(AppState.shared.loginItems)
                 .environmentObject(AppState.shared.license)
                 .environmentObject(AppState.shared.hotkeys)
+                .environmentObject(AppState.shared.schedule)
         } label: {
             Image(systemName: "doc.plaintext")
         }

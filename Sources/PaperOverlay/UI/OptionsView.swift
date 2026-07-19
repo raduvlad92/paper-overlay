@@ -3,6 +3,8 @@ import SwiftUI
 struct OptionsView: View {
     @EnvironmentObject private var settings: OverlaySettings
     @EnvironmentObject private var hotkeys: HotkeyManager
+    @EnvironmentObject private var schedule: ScheduleManager
+    @EnvironmentObject private var presetStore: PresetStore
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -55,6 +57,74 @@ struct OptionsView: View {
                 .font(.caption2)
                 .foregroundStyle(.tertiary)
                 .fixedSize(horizontal: false, vertical: true)
+
+            Divider()
+
+            Toggle(isOn: $schedule.config.enabled) {
+                Text("Switch presets on a schedule", bundle: .appModule)
+            }
+            .toggleStyle(.switch)
+            .controlSize(.small)
+
+            if schedule.config.enabled {
+                HStack {
+                    Text("Night from", bundle: .appModule)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    DatePicker("", selection: minutesBinding(\.nightStartMinutes),
+                               displayedComponents: .hourAndMinute)
+                        .labelsHidden()
+                        .controlSize(.small)
+                    Text("to", bundle: .appModule)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    DatePicker("", selection: minutesBinding(\.nightEndMinutes),
+                               displayedComponents: .hourAndMinute)
+                        .labelsHidden()
+                        .controlSize(.small)
+                }
+
+                presetPicker(titleKey: "Day preset", selection: $schedule.config.dayPresetID)
+                presetPicker(titleKey: "Night preset", selection: $schedule.config.nightPresetID)
+
+                Text("Manual changes stay until the next switch.", bundle: .appModule)
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+            }
         }
+    }
+
+    private func presetPicker(titleKey: LocalizedStringKey, selection: Binding<UUID?>) -> some View {
+        HStack {
+            Text(titleKey, bundle: .appModule)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            Spacer()
+            Picker("", selection: selection) {
+                Text("None", bundle: .appModule).tag(UUID?.none)
+                ForEach(Preset.builtIns + presetStore.customPresets) { preset in
+                    Text(preset.name).tag(Optional(preset.id))
+                }
+            }
+            .pickerStyle(.menu)
+            .labelsHidden()
+            .controlSize(.small)
+            .fixedSize()
+        }
+    }
+
+    private func minutesBinding(_ keyPath: WritableKeyPath<ScheduleManager.Config, Int>) -> Binding<Date> {
+        Binding(
+            get: {
+                let minutes = schedule.config[keyPath: keyPath]
+                return Calendar.current.date(bySettingHour: minutes / 60,
+                                             minute: minutes % 60,
+                                             second: 0, of: Date()) ?? Date()
+            },
+            set: { date in
+                let comps = Calendar.current.dateComponents([.hour, .minute], from: date)
+                schedule.config[keyPath: keyPath] = (comps.hour ?? 0) * 60 + (comps.minute ?? 0)
+            }
+        )
     }
 }

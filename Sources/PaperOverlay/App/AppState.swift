@@ -12,14 +12,17 @@ final class AppState {
     let loginItems: LoginItemManager
     let license: LicenseManager
     let hotkeys: HotkeyManager
+    let schedule: ScheduleManager
 
     private init() {
         let settings = OverlaySettings()
+        let presetStore = PresetStore()
         self.settings = settings
-        self.presetStore = PresetStore()
+        self.presetStore = presetStore
         self.overlayManager = OverlayManager(settings: settings)
         self.loginItems = LoginItemManager()
         self.license = LicenseManager()
         self.hotkeys = HotkeyManager { settings.masterEnabled.toggle() }
+        self.schedule = ScheduleManager(settings: settings, presetStore: presetStore)
     }
 }

@@ -80,3 +80,12 @@
 "Record" = "Record";
 "Remove shortcut" = "Remove shortcut";
 "Works system-wide. Include ⌘, ⌃, or ⌥; press Esc to cancel recording." = "Works system-wide. Include ⌘, ⌃, or ⌥; press Esc to cancel recording.";
+
+/* Schedule */
+"Switch presets on a schedule" = "Switch presets on a schedule";
+"Night from" = "Night from";
+"to" = "to";
+"Day preset" = "Day preset";
+"Night preset" = "Night preset";
+"None" = "None";
+"Manual changes stay until the next switch." = "Manual changes stay until the next switch.";
