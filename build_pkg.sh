@@ -47,3 +47,14 @@ echo "==> Done: $INSTALLER_PKG"
 echo "    Downloaded copies are blocked once by Gatekeeper (unsigned):"
 echo "    double-click -> Done -> System Settings -> Privacy & Security -> Open Anyway."
 echo "    The wizard then installs the app quarantine-free: no further warnings."
+
+# Zip + checksum for the in-app updater (UpdateManager downloads these two
+# release assets directly; the app's own download is never quarantined, so
+# self-updates install with no Gatekeeper prompt at all).
+ZIP_PATH="$DIST_DIR/$APP_NAME-$VERSION.zip"
+SHA_PATH="$ZIP_PATH.sha256"
+echo "==> Building updater artifacts"
+rm -f "$ZIP_PATH" "$SHA_PATH"
+ditto -c -k --keepParent "$APP_BUNDLE" "$ZIP_PATH"
+shasum -a 256 "$ZIP_PATH" | awk '{print $1}' > "$SHA_PATH"
+echo "==> Done: $ZIP_PATH (+ .sha256)"
