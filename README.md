@@ -19,9 +19,11 @@ the Windows app of the same name.
 - **Presets** — five built-ins (Neutral, Warm, Sepia, Night, Reading) plus
   unlimited named custom presets.
 - **Start at Login** — self-service Login Items toggle via `SMAppService`.
-- **Private by design** — no network access, no Accessibility, Screen
-  Recording, camera, microphone, contacts, or file permissions. Settings are
-  stored in `UserDefaults`.
+- **Self-updating** — checks GitHub once an hour for a newer release and
+  installs it in place with no Gatekeeper prompt (see "Updates" below). The
+  only toggle-able network request the app makes; everything else about it
+  is offline. No Accessibility, Screen Recording, camera, microphone,
+  contacts, or file permissions. Settings are stored in `UserDefaults`.
 
 **Works with True Tone and Night Shift** — both shift your display's white
 point *on top of* the overlay, so they combine with Paper Overlay's tint
@@ -63,6 +65,28 @@ same Done → System Settings → **Open Anyway** dance on first launch (steps
 are in the "If the app won't open" file inside the dmg). On macOS 15 and
 newer, right-click → Open is no longer enough for unsigned apps.
 
+## Updates
+
+Paper Overlay checks GitHub for a newer release once an hour (plus once
+shortly after launch, and after your Mac wakes from sleep). This is the only
+network request the app ever makes — a plain version check against
+`api.github.com`, no telemetry, nothing else sent — and it can be turned off
+from the Options tab.
+
+When an update is found, a small badge appears on the menu bar icon and a
+banner offers to install it. Installing downloads the release archive and
+its checksum, verifies the checksum, then replaces the app in place and
+relaunches it — with **no Gatekeeper prompt**, because files the app
+downloads itself never receive the quarantine flag that triggers Gatekeeper
+in the first place (that flag is only added by browsers and similar apps).
+
+One one-time requirement: the `.pkg` installer's `postinstall` script hands
+ownership of the installed app to the user who ran it, because `pkgbuild`
+installs payloads as `root:wheel` by default and a plain user process can't
+modify those in place. Installs from before this existed are still
+root-owned; the app detects that specific case and tells you to grab the
+latest `.pkg` and reinstall once — after that, updates apply automatically.
+
 ## Build from source
 
 Only the Xcode **Command Line Tools** are required — no Xcode.app, no
@@ -94,8 +118,11 @@ Both build a universal (Apple Silicon + Intel) release binary and assemble
 `dist/PaperOverlay.app` (with `LSUIElement` so it stays out of the Dock),
 ad-hoc codesigned (`codesign --sign -`). `build_pkg.sh` wraps it in a
 `pkgbuild`/`productbuild` installer with welcome/conclusion pages
-(`Packaging/pkg/`) that auto-launches the app after install; `build_dmg.sh`
-produces `dist/PaperOverlay-<version>.dmg` via `hdiutil`.
+(`Packaging/pkg/`) that auto-launches the app after install, and also
+produces `dist/PaperOverlay-<version>.zip` + `.zip.sha256` — the assets the
+in-app updater downloads and verifies, so every release needs both attached
+(`gh release create ... dist/*.pkg dist/*.zip dist/*.zip.sha256`).
+`build_dmg.sh` produces `dist/PaperOverlay-<version>.dmg` via `hdiutil`.
 
 The only way to remove the remaining one-time Gatekeeper dialog entirely is
 Developer ID signing + notarization, which requires the paid Apple Developer
@@ -109,7 +136,7 @@ Sources/PaperOverlay/
   App/                           entry point, app delegate, composition root
   Overlay/                       per-display click-through windows + hot-plug sync
   Rendering/                     Metal shader source + MTKView grain renderer
-  Model/                         settings, presets, login item, licensing stub
+  Model/                         settings, presets, login item, licensing stub, updater
   UI/                            MenuBarExtra dashboard (SwiftUI)
   Resources/en.lproj/            localized strings (classic .strings format —
                                  string catalogs need Xcode tooling; more
