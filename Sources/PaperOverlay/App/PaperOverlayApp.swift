@@ -13,6 +13,7 @@ struct PaperOverlayApp: App {
                 .environmentObject(AppState.shared.license)
                 .environmentObject(AppState.shared.hotkeys)
                 .environmentObject(AppState.shared.schedule)
+                .environmentObject(AppState.shared.updates)
         } label: {
             MenuBarIconView()
         }

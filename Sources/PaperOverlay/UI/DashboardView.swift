@@ -7,6 +7,7 @@ enum DashboardTab: Hashable {
 struct DashboardView: View {
     @EnvironmentObject private var settings: OverlaySettings
     @EnvironmentObject private var loginItems: LoginItemManager
+    @EnvironmentObject private var updates: UpdateManager
     @State private var tab: DashboardTab = .presets
 
     // TODO(licensing): flip to true when purchasing goes live.
@@ -25,6 +26,8 @@ struct DashboardView: View {
                 .controlSize(.small)
                 .help(Text("Enable or disable the overlay everywhere", bundle: .appModule))
             }
+
+            UpdateBannerView()
 
             Picker("", selection: $tab) {
                 Text("Presets", bundle: .appModule).tag(DashboardTab.presets)

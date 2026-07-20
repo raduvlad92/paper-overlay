@@ -89,3 +89,17 @@
 "Night preset" = "Night preset";
 "None" = "None";
 "Manual changes stay until the next switch." = "Manual changes stay until the next switch.";
+
+/* Update banner */
+"Version %@ is ready" = "Version %@ is ready";
+"Installs automatically — no security prompts." = "Installs automatically — no security prompts.";
+"Install" = "Install";
+"Installing update…" = "Installing update…";
+"Open GitHub" = "Open GitHub";
+
+/* Options tab: updates */
+"Check for updates automatically" = "Check for updates automatically";
+"Check Now" = "Check Now";
+"Last checked" = "Last checked";
+"Checks github.com once per hour. Nothing else is sent." = "Checks github.com once per hour. Nothing else is sent.";
+"Available in the packaged app." = "Available in the packaged app.";
