@@ -14,7 +14,7 @@ struct PaperOverlayApp: App {
                 .environmentObject(AppState.shared.hotkeys)
                 .environmentObject(AppState.shared.schedule)
         } label: {
-            Image(systemName: "doc.plaintext")
+            MenuBarIconView()
         }
         .menuBarExtraStyle(.window)
     }
