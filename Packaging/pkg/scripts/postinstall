@@ -1,12 +1,24 @@
 #!/bin/bash
-# Launch Paper Overlay for the user who is running the installer.
-# Installer runs this as root; `launchctl asuser` targets the console
-# user's session so LaunchServices starts the app as that user.
-# Best-effort: a failure here must never fail the installation.
+# Runs as root during the admin-authorized pkg install. Two jobs:
+# best-effort launch of the app, and handing ownership of the installed
+# bundle to the console user.
+#
+# Why the chown: pkgbuild installs payloads as root:wheel, and a plain user
+# process — even an admin — cannot rename or modify a root:wheel item
+# without elevated privileges (verified: not even deleting one file inside
+# the bundle succeeds). The in-app updater replaces this bundle in place
+# from a normal, unprivileged user process, so it needs to already own it.
+# Doing the chown here, inside this already-elevated install step, adds no
+# new permission prompt — the user already authenticated to get this far.
 
-CONSOLE_UID="$(stat -f %u /dev/console 2>/dev/null || true)"
-if [ -n "$CONSOLE_UID" ] && [ "$CONSOLE_UID" != "0" ]; then
-    launchctl asuser "$CONSOLE_UID" /usr/bin/open /Applications/PaperOverlay.app || true
+CONSOLE_USER="$(stat -f %Su /dev/console 2>/dev/null || true)"
+if [ -n "$CONSOLE_USER" ] && [ "$CONSOLE_USER" != "root" ]; then
+    chown -R "$CONSOLE_USER":staff /Applications/PaperOverlay.app || true
+
+    CONSOLE_UID="$(id -u "$CONSOLE_USER" 2>/dev/null || true)"
+    if [ -n "$CONSOLE_UID" ]; then
+        launchctl asuser "$CONSOLE_UID" /usr/bin/open /Applications/PaperOverlay.app || true
+    fi
 fi
 
 exit 0

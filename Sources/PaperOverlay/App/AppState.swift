@@ -13,6 +13,7 @@ final class AppState {
     let license: LicenseManager
     let hotkeys: HotkeyManager
     let schedule: ScheduleManager
+    let updates: UpdateManager
 
     private init() {
         let settings = OverlaySettings()
@@ -24,5 +25,6 @@ final class AppState {
         self.license = LicenseManager()
         self.hotkeys = HotkeyManager { settings.masterEnabled.toggle() }
         self.schedule = ScheduleManager(settings: settings, presetStore: presetStore)
+        self.updates = UpdateManager()
     }
 }
